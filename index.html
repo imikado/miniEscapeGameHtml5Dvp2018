@@ -5,11 +5,12 @@
     <style>
     
     .footer{
-    color:#fff;
+    color:#ddd;
     text-align:center;
+    font-size:11px;
     }
     .footer a{
-    color:#fff;
+    color:#ddd;
     
     }
     
@@ -62,6 +63,7 @@
 		height:40px;
 		
 		background:url('img/bar.svg.png') no-repeat;
+		
     }
     
     #popup{
@@ -349,6 +351,8 @@
 		
 		showObject('game');
 		showObject('barSvg');
+		
+		message('');
     }
     </script>
   </head>
@@ -458,7 +462,7 @@
 		<svg id="barSvg" width="600" height="40">
 			<rect x="0" y="0" width="113" height="40" opacity="0" onclick="goLeft()"  style="fill:rgb(255,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
 			
-			<text id="messageTxt" x="150" y="24" fill="#fff" font-size="16px">Click on this text to create a new text.</text>
+			<text id="messageTxt" x="150" y="30" fill="#fff" font-size="16px">Click on this text to create a new text.</text>
 			
 			<rect x="500" y="0" width="113" height="40" opacity="0" onclick="goRight()"  style="fill:rgb(255,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
 		</svg>
@@ -469,6 +473,9 @@
   </div>
   
 <script>switchRoom('room');</script>
+
+<p>&nbsp;</p>
+  
   
   <p class="footer">Mini jeu dans le cadre <a target="_blank" href="https://www.developpez.net/forums/d1874105/applications/developpement-2d-3d-jeux/huitieme-week-end-programmation-jeux-video-developpez-com-se-tiendra-31-aout-2-septembre/#post10363689">du concours developpez.com </a> <br/>
   <a href="https://www.developpez.net/forums/d1889452/applications/developpement-2d-3d-jeux/projets/we-jv8-ptite-escape-game-html-js/" target="_blank">suivi forum</a>

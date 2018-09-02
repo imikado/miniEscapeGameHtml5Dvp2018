@@ -1,0 +1,477 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style>
+    
+    .footer{
+    color:#fff;
+    text-align:center;
+    }
+    .footer a{
+    color:#fff;
+    
+    }
+    
+    *{
+    font-family:verdana,arial;
+    }
+    
+    body{
+    background:#000;
+    }
+    
+    #intro{
+		margin:auto;
+		display:block;
+		
+		padding:20px;
+		
+		width:500px;
+		height:500px;
+		
+		background:url('img/intro.svg.png') no-repeat bottom left #1a1a1a;
+		
+		border:10px solid gray;	
+		
+		color:#fff;
+		
+		cursor:hand;
+    }
+    
+    #game{
+    
+		z-index:10;
+		margin:auto;
+		display:none;
+		
+		margin-top:40px;
+    
+		width:600px;
+		height:400px;
+		
+		background:#fff;
+		
+		border:10px solid gray;	
+    }
+    
+    #bar{
+		
+		display:block;
+		width:600px;
+		height:40px;
+		
+		background:url('img/bar.svg.png') no-repeat;
+    }
+    
+    #popup{
+    z-index:20;
+    display:none;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+	position:absolute;
+
+    }
+    
+    
+    #digicode{
+    z-index:20;
+    display:none;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+	position:absolute;
+	background:#222;
+    }
+    
+    #myCode{
+		background:#6fa094;
+		margin:auto;
+		width:190px;
+		height:320px;
+		border:10px solid #39585a;
+		padding:20px;
+		
+		padding-top:0px;
+    }
+    
+    #mycode input{
+		width:50px;
+		height:50px;
+		
+		background:#39585a;
+		border:0px;
+		
+		color:#fff;
+		
+		margin-right:10px;
+    }
+    #myCode #myCodeTxt{
+		width:180px;
+		height:20px;
+		background:#000;
+		
+		display:block;
+		
+		padding:10px 0px;
+		
+		font-size:20px;
+		
+		text-align:center;
+		
+		color:darkred;
+    }
+    
+    .exit{
+    text-align:center;
+    }
+    
+    .exit a{
+	color:#fff;
+    }
+    
+    svg{
+    display:none;
+    }
+    
+    </style>
+    
+    <script>
+    
+    var iRoom=1;
+    
+    var tRoom=Array('room-left','room','room-right','room-back');
+    
+    function goLeft(){
+    
+		iRoom-=1;
+		
+		if(iRoom<0){
+			iRoom=3;
+		}
+		
+		
+		switchRoom(tRoom[iRoom]);
+    }
+    
+    function goRight(){
+    
+		iRoom+=1;
+		
+		if(iRoom>3){
+			iRoom=0;
+		}
+		
+		
+		switchRoom(tRoom[iRoom]);
+    
+    }
+    
+    function resetAllSvg(){
+		for(var i=0;i<tRoom.length;i++){
+			hideObject(tRoom[i]+'Svg');
+		}
+    }
+    
+    function hideObject(sId){
+		var b=getById(sId);
+		if(b){
+			b.style.display='none';
+		}
+    }
+    
+    function showObject(sId){
+		var b=getById(sId);
+		if(b){		
+			b.style.display='block';
+		}
+    }
+    
+    function switchRoom(sRoom){
+		actionOn('','');
+    
+		var a=getById('game');
+		if(a){
+			console.log('img/'+sRoom+'.svg.png');
+			a.style.background="url('img/"+sRoom+".svg.png')";
+			
+			resetAllSvg();
+			
+			showObject(sRoom+'Svg');
+		}
+    }
+    
+    function actionOn(sRoom,sObject){
+		console.log('action in '+sRoom+' on '+sObject);
+		
+		if(sRoom=='room'){
+			
+			if(sObject=='miroir'){
+			
+				openPopup('room-zoom-miroir');
+			
+				return message('C est quoi cette formule ?');
+			}else if(sObject=='tiroir-gauche'){
+				message('Quel etait ce papier dans le tiroir ?');
+				
+				openPopup('room-zoom-tiroirGauche');
+				
+				return;
+				
+			}else if(sObject=='tiroir-droite'){
+				message('Que veut dire cette formule ?');
+				
+				openPopup('room-zoom-tiroirDroite');
+				
+				return;
+			}
+		
+		}else if(sRoom=='room-left'){
+			if(sObject=='porte-gauche'){
+			
+				openPopup('room-left-zoom-porteGauche');
+			
+				return message('Que veut dire ce message ?');
+			}else if(sObject=='porte-droite'){
+			
+				openPopup('room-left-zoom-porteDroite');
+				
+				return message('Ca veut dire quoi cette formule ?');
+			}
+		
+		}else if(sRoom=='room-right'){
+			if(sObject=='cheminee'){
+			
+				openPopup('room-right-zoom-cheminee');
+			
+				return message('Que veut dire ce signe ?');
+			}
+		}else if(sRoom=='room-back'){
+			if(sObject=='porte'){
+				return message('La porte est bloquee, il faut trouver le code');
+			}else if(sObject=='digicode'){
+			
+				openDigicode();
+			
+				return message('Nous devons trouver le code pour sortir');
+			}
+		
+		}
+		
+		message('Rien d interessant ici');
+    }
+    
+    function message(sText){
+		var a=getById('messageTxt');
+		if(a){
+			a.text	=sText;
+			
+			var textNode = a.childNodes[0];
+			textNode.nodeValue = sText;
+		}
+		
+		
+    }
+    //room-zoom-tiroirGauche.svg
+    function openPopup(sImg){
+		var a=getById('popup');
+		if(a){
+			a.style.background="url('img/"+sImg+".svg.png') center no-repeat #222";
+			
+			showObject('popup');
+		}
+    }
+    
+    function closePopup(){
+		hideObject('popup');
+    }
+    
+    function openDigicode(){
+		showObject('digicode');
+	}
+    
+    function closeDigicode(){
+		hideObject('digicode');
+    }
+    
+    function getById(sId){
+		return document.getElementById(sId);
+    }
+    
+    var digicodeValue='';
+    function digicodePress(key){
+    
+    console.log('key:'+key);
+    
+		if(key=='VAL'){
+			console.log('VAL');
+			
+			if(digicodeValue=='496'){
+			
+				closeDigicode();
+				
+				hideObject('bar');
+				
+				switchRoom('room-back-end');
+				
+				
+			}else{
+				
+				digicodeValue='';
+				
+			}
+			
+			
+			
+		}else if(key=='DEL'){
+			console.log('DEL');
+			digicodeValue=digicodeValue.substring(0, (digicodeValue.length-1) );
+		}else{
+			console.log('ELSE');
+			digicodeValue=digicodeValue+''+key;
+			
+			console.log(digicodeValue);
+		}
+		
+		var a=getById('myCodeTxt');
+		if(a){
+		console.log('inner');
+			a.innerHTML=digicodeValue;
+		}
+    
+    }
+    
+    function startGame(){
+		hideObject('intro');
+		
+		showObject('game');
+		showObject('barSvg');
+    }
+    </script>
+  </head>
+  <body>
+  
+  <div id="popup" onclick="closePopup()">
+  </div>
+  
+  <div id="digicode" >
+  
+	<p class="exit" ><a href="#" onclick="closeDigicode()">Fermer</a></p>
+	
+  
+	<div id="myCode">
+	
+		
+		<p>
+			<span id="myCodeTxt" >CODE</span>
+		</p>
+	
+
+		<p>
+		<input type="button" value="1" onclick="digicodePress(this.value)"/>
+		<input type="button" value="2" onclick="digicodePress(this.value)"/>
+		<input type="button" value="3" onclick="digicodePress(this.value)"/>
+		</p>
+		
+		<p>
+		<input type="button" value="4" onclick="digicodePress(this.value)"/>
+		<input type="button" value="5" onclick="digicodePress(this.value)"/>
+		<input type="button" value="6" onclick="digicodePress(this.value)"/>
+		</p>
+		
+		<p>
+		<input type="button" value="7" onclick="digicodePress(this.value)"/>
+		<input type="button" value="8" onclick="digicodePress(this.value)"/>
+		<input type="button" value="9" onclick="digicodePress(this.value)"/>
+		</p>
+		
+		<p>
+		<input type="button" value="0" onclick="digicodePress(this.value)"/>
+		<input type="button" value="DEL" onclick="digicodePress(this.value)"/>
+		<input type="button" value="VAL" onclick="digicodePress(this.value)"/>
+		</p>
+
+		
+	</div>
+  
+  </div>
+  
+  <div id="intro" onclick="startGame()">
+	<p>C'est la fin du monde, un enorme de meteorite menace de s'&eacute;craser sur la terre et de tout ravager.</p>
+	<p>Heureusement, votre ville a un boomker, mais Gilbert, votre voisin de toujours, vous a enferm&eacute; dans sa pi&egrave;ce secrete pour vous emp&ecirc;cher de vous y abriter.<p>
+	<p>Pour ouvrir la porte afin de vous mettre &agrave; l'abri vous devrez trouver le digicode</p>
+  
+	<p>Cliquer pour d&eacute;marrer</p>
+  </div>
+  
+  <div id="game">
+  
+	
+	
+	<svg id="roomSvg"  width="600" height="400" >
+	
+		<rect x="0" y="0" width="600" height="400" onclick="actionOn('','');" opacity="0" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)" />
+		
+	
+		<rect x="175" y="20" width="252" height="115" onclick="actionOn('room','miroir');" opacity="0" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)" />
+		
+		<rect x="160" y="239" width="132" height="22" onclick="actionOn('room','tiroir-gauche')" opacity="0" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+		
+		
+		<rect x="313" y="239" width="132" height="22" onclick="actionOn('room','tiroir-droite')" opacity="0" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+		
+	</svg>
+	
+	<svg id="room-rightSvg"  width="600" height="400">
+		<rect x="0" y="0" width="600" height="400" onclick="actionOn('','');" opacity="0" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)" />
+		
+		<rect x="162" y="227" width="208" height="60" opacity="0" onclick="actionOn('room-right','cheminee')"  style="fill:rgb(0,255,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+	</svg>
+	
+	
+	
+	<svg id="room-leftSvg"  width="600" height="400">
+	
+		<rect x="0" y="0" width="600" height="400" onclick="actionOn('','');" opacity="0" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)" />
+		
+		
+		<rect x="179" y="43" width="112" height="280" opacity="0" onclick="actionOn('room-left','porte-gauche')" style="fill:rgb(255,255,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+		
+		<rect x="312" y="43" width="112" height="280" opacity="0" onclick="actionOn('room-left','porte-droite')"  style="fill:rgb(255,255,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+	</svg>
+	
+	<svg id="room-backSvg"  width="600" height="400">
+	
+		<rect x="0" y="0" width="600" height="400" onclick="actionOn('','');" opacity="0" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)" />
+	
+	
+		<rect x="209" y="21" width="183" height="270" opacity="0" onclick="actionOn('room-back','porte')"  style="fill:rgb(255,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+		
+		<rect x="437" y="69" width="50" height="53" opacity="0" onclick="actionOn('room-back','digicode')" style="fill:rgb(255,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+	</svg>
+	 
+  
+	<div id="bar" >
+		<svg id="barSvg" width="600" height="40">
+			<rect x="0" y="0" width="113" height="40" opacity="0" onclick="goLeft()"  style="fill:rgb(255,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+			
+			<text id="messageTxt" x="150" y="24" fill="#fff" font-size="16px">Click on this text to create a new text.</text>
+			
+			<rect x="500" y="0" width="113" height="40" opacity="0" onclick="goRight()"  style="fill:rgb(255,0,255);stroke-width:10;stroke:rgb(0,0,0)"></rect>
+		</svg>
+		
+	</div>
+  
+  
+  </div>
+  
+<script>switchRoom('room');</script>
+  
+  <p class="footer">Mini jeu dans le cadre <a target="_blank" href="https://www.developpez.net/forums/d1874105/applications/developpement-2d-3d-jeux/huitieme-week-end-programmation-jeux-video-developpez-com-se-tiendra-31-aout-2-septembre/#post10363689">du concours developpez.com </a> (<a href="https://www.developpez.net/forums/d1889452/applications/developpement-2d-3d-jeux/projets/we-jv8-ptite-escape-game-html-js/" target="_blank">suivi forum</a>)</p>
+  
+  
+  </body>
+</html>
